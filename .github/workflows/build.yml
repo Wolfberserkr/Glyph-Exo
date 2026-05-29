@@ -64,11 +64,14 @@ jobs:
           TAG="latest-build"
           gh release delete "$TAG" --yes 2>/dev/null || true
           git push --delete origin "$TAG" 2>/dev/null || true
+          cat > /tmp/notes.md << 'EOF'
+          ## Install on your Nothing Phone 3
+          1. Download app-debug.apk below
+          2. Tap to install (allow unknown apps if prompted)
+          3. Grant notification access in the app
+          4. Open Glyph Toys Manager
+          EOF
           gh release create "$TAG" "$APK" \
             --title "Unread Count — latest build" \
             --prerelease \
-            --notes "## Install on your Nothing Phone 3
-1. Download app-debug.apk below
-2. Tap to install (allow unknown apps if prompted)
-3. Grant notification access in the app
-4. Open Glyph Toys Manager"
+            --notes-file /tmp/notes.md
