@@ -21,23 +21,33 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Install Android SDK API 35
+        run: |
+          SDKMANAGER="${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager"
+          yes | "$SDKMANAGER" --licenses > /dev/null 2>&1 || true
+          "$SDKMANAGER" "platforms;android-35" "build-tools;35.0.0"
+
       - name: Download GlyphMatrix SDK
         run: |
           mkdir -p GlyphCount/app/libs
-          curl -sL "https://github.com/Nothing-Developer-Programme/GlyphMatrix-Developer-Kit/archive/refs/heads/main.zip" \
-               -o sdk.zip
-          unzip -q sdk.zip "*.aar" -d /tmp/sdk_raw || true
+          curl -sL \
+            "https://github.com/Nothing-Developer-Programme/GlyphMatrix-Developer-Kit/archive/refs/heads/main.zip" \
+            -o sdk.zip
+          # Extract everything, then find the .aar (it lives inside a subdirectory)
+          unzip -q sdk.zip -d /tmp/sdk_raw
           AAR=$(find /tmp/sdk_raw -name "*.aar" | head -1)
           if [ -z "$AAR" ]; then
-            echo "ERROR: No .aar file found in GlyphMatrix-Developer-Kit repo" && exit 1
+            echo "ERROR: No .aar file found. Repo contents:"
+            find /tmp/sdk_raw | head -40
+            exit 1
           fi
           cp "$AAR" GlyphCount/app/libs/GlyphMatrixSDK.aar
-          echo "SDK copied: $(ls -lh GlyphCount/app/libs/)"
+          echo "SDK: $(ls -lh GlyphCount/app/libs/)"
 
       - name: Build debug APK
         run: |
           chmod +x GlyphCount/gradlew
-          cd GlyphCount && ./gradlew assembleDebug --no-daemon --stacktrace
+          cd GlyphCount && ./gradlew assembleDebug --no-daemon
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
@@ -46,22 +56,19 @@ jobs:
           path: GlyphCount/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
 
-      - name: Publish APK to GitHub Release
+      - name: Publish to GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           APK="GlyphCount/app/build/outputs/apk/debug/app-debug.apk"
           TAG="latest-build"
-
-          # Replace existing release so the URL stays the same every build
           gh release delete "$TAG" --yes 2>/dev/null || true
           git push --delete origin "$TAG" 2>/dev/null || true
-
           gh release create "$TAG" "$APK" \
             --title "Unread Count — latest build" \
             --prerelease \
             --notes "## Install on your Nothing Phone 3
-
-          1. Open the download link below on your phone
-          2. Tap the downloaded file to install (allow unknown apps if prompted)
-          3. Open the app → grant notification access → open Glyph Toys Manager"
+1. Download app-debug.apk below
+2. Tap to install (allow unknown apps if prompted)
+3. Grant notification access in the app
+4. Open Glyph Toys Manager"
