@@ -21,11 +21,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Install Android SDK API 35
-        run: |
-          SDKMANAGER="${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager"
-          yes | "$SDKMANAGER" --licenses > /dev/null 2>&1 || true
-          "$SDKMANAGER" "platforms;android-35" "build-tools;35.0.0"
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: 'platforms;android-35 build-tools;35.0.0'
 
       - name: Download GlyphMatrix SDK
         run: |
