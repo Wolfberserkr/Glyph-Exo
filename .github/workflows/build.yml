@@ -5,6 +5,9 @@ on:
     branches: [main, claude/gifted-meitner-CuY6Q]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -36,9 +39,29 @@ jobs:
           chmod +x GlyphCount/gradlew
           cd GlyphCount && ./gradlew assembleDebug --no-daemon --stacktrace
 
-      - name: Upload APK
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: UnreadCount-debug
           path: GlyphCount/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
+
+      - name: Publish APK to GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          APK="GlyphCount/app/build/outputs/apk/debug/app-debug.apk"
+          TAG="latest-build"
+
+          # Replace existing release so the URL stays the same every build
+          gh release delete "$TAG" --yes 2>/dev/null || true
+          git push --delete origin "$TAG" 2>/dev/null || true
+
+          gh release create "$TAG" "$APK" \
+            --title "Unread Count — latest build" \
+            --prerelease \
+            --notes "## Install on your Nothing Phone 3
+
+          1. Open the download link below on your phone
+          2. Tap the downloaded file to install (allow unknown apps if prompted)
+          3. Open the app → grant notification access → open Glyph Toys Manager"
