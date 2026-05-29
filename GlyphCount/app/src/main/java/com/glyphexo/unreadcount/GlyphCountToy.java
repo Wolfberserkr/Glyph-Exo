@@ -11,7 +11,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -20,7 +19,6 @@ import com.nothing.ketchum.Glyph;
 import com.nothing.ketchum.GlyphMatrixFrame;
 import com.nothing.ketchum.GlyphMatrixManager;
 import com.nothing.ketchum.GlyphMatrixObject;
-import com.nothing.ketchum.GlyphMatrixUtils;
 
 public class GlyphCountToy extends Service {
 
@@ -174,14 +172,13 @@ public class GlyphCountToy extends Service {
         if (mGM == null || !running) return;
         try {
             GlyphMatrixObject obj = new GlyphMatrixObject.Builder()
-                .setImageSource(GlyphMatrixUtils.drawableToBitmap(
-                    new BitmapDrawable(getResources(), bmp)))
+                .setImageSource(bmp)   // Bitmap passed directly as Object
                 .setBrightness(255)
                 .build();
 
-            GlyphMatrixFrame frame = new GlyphMatrixFrame.Builder()
-                .addTop(obj)
-                .build(this);
+            GlyphMatrixFrame.Builder fb = new GlyphMatrixFrame.Builder();
+            fb.addTop(obj);
+            GlyphMatrixFrame frame = fb.build();
 
             mGM.setMatrixFrame(frame.render());
         } catch (Exception ignored) {}
