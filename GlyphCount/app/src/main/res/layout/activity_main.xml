@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="40dp"
+    android:background="#000000">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Unread Count"
+        android:textSize="28sp"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:letterSpacing="0.05"
+        android:layout_marginBottom="12dp"/>
+
+    <TextView
+        android:id="@+id/statusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="#888888"
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.4"
+        android:layout_marginBottom="40dp"/>
+
+    <Button
+        android:id="@+id/notifButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Grant Notification Access"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/toysButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Open Glyph Toys Manager"/>
+
+</LinearLayout>

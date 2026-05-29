@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Bell body -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,18 C47,18 41,24 41,31 L41,35
+                          C34,38 29,45 29,53 L29,68
+                          L20,76 L88,76 L79,68 L79,53
+                          C79,45 74,38 67,35 L67,31
+                          C67,24 61,18 54,18 Z"/>
+
+    <!-- Bell clapper -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M46,76 C46,81 49.6,85 54,85 C58.4,85 62,81 62,76 Z"/>
+
+    <!-- Notification badge circle -->
+    <circle
+        android:fillColor="#000000"
+        android:centerX="79"
+        android:centerY="29"
+        android:radius="18"/>
+    <circle
+        android:fillColor="#FFFFFF"
+        android:centerX="79"
+        android:centerY="29"
+        android:radius="15"/>
+
+    <!-- Badge number (drawn as path for vector compatibility) -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M75,22 L75,36 L78,36 L78,22 Z
+                          M72,22 L72,25 L75,25 L75,22 Z
+                          M80,34 L83,34 L83,36 L80,36 Z"/>
+
+</vector>
